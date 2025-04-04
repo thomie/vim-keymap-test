@@ -1,0 +1,77 @@
+#!/usr/bin/env -S shelltest --execdir
+
+## Motions
+# 1. w: simple test with whitespace, punctation and newline
+<
+foo bar.baz
+qux
+$ ./bin/keymaptest vim 'send wr1' 'send wr,' 'send wr2' 'send wr3'
+foo 1ar,2az
+3ux
+>= 0
+
+# 2. w: cursor is on space before word
+<
+' foo bar
+$ ./bin/keymaptest vim 'send l' 'send wr1'
+' 1oo bar
+>= 0
+
+# 3. w: there are two spaces before the word, the cursor is on the first one
+<
+'  foo bar
+$ ./bin/keymaptest vim 'send l' 'send wr1'
+'  1oo bar
+>= 0
+
+# 4. e: simple test with whitespace and punctation
+<
+foo bar.baz
+qux
+$ ./bin/keymaptest vim 'send er1' 'send er2' 'send er,' 'send er3' 'send er4'
+fo1 ba2,ba3
+qu4
+>= 0
+
+# 5. b: simple test with whitespace and punctation
+<
+foo bar.baz
+qux
+$ ./bin/keymaptest vim 'send jll' 'send br1' 'send br2' 'send br,' 'send br3' 'send br4'
+4oo 3ar,2az
+1ux
+>= 0
+
+# 6. W
+<
+foo bar.baz qux
+quux
+$ ./bin/keymaptest vim 'send Wr1' 'send Wr2' 'send Wr3'
+foo 1ar.baz 2ux
+3uux
+>= 0
+
+# 7. E
+<
+foo bar.baz qux
+quux
+$ ./bin/keymaptest vim 'send Er1' 'send Er2' 'send Er3' 'send Er4'
+fo1 bar.ba2 qu3
+quu4
+>= 0
+
+# 8. B
+<
+foo bar.baz qux
+quux
+$ ./bin/keymaptest vim 'send jll' 'send Br1' 'send Br2' 'send Br3' 'send Br4'
+4oo 3ar.baz 2ux
+1uux
+>= 0
+
+# 9. 2w
+<
+foo bar baz
+$ ./bin/keymaptest vim 'send 2wr1'
+foo bar 1az
+>= 0

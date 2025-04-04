@@ -1,0 +1,29 @@
+#!/usr/bin/env -S shelltest --execdir
+
+# 1. vee should select two words ("anchor is sticky")
+<
+foo bar baz
+$ ./bin/keymaptest vim 'send veed'
+ baz
+>= 0
+
+# 2. in select mode, 'e' followed by 'b' is a noop
+<
+foo bar baz
+$ ./bin/keymaptest vim 'send vwwbd'
+ar baz
+>= 0
+
+# 3. after exiting select mode, cursor should be on head
+<
+foo
+$ ./bin/keymaptest vim 'send ve' 'send $ESC' 'expect NOR' 'send r1'
+fo1
+>= 0
+
+# 4. x in select mode should ignore count
+<
+foo bar
+$ ./bin/keymaptest vim 'send ve3x'
+ bar
+>= 0

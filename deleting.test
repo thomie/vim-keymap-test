@@ -1,0 +1,159 @@
+#!/usr/bin/env -S shelltest --execdir
+
+## x
+# 1. x
+<
+foo
+$ ./bin/keymaptest vim 'send x'
+oo
+>= 0
+
+# 2. 2x
+<
+foo
+$ ./bin/keymaptest vim 'send 2x'
+o
+>= 0
+
+
+## dw
+# 3. dw
+<
+foo bar
+$ ./bin/keymaptest vim 'send dw'
+bar
+>= 0
+
+# 4. dw while on last letter of a word
+<
+foo bar
+$ ./bin/keymaptest vim 'send 2l' 'send dw'
+fobar
+>= 0
+
+# 5. dw while on space in between words
+<
+foo bar
+$ ./bin/keymaptest vim 'send 3l' 'send dw'
+foobar
+>= 0
+
+# 6. dw while on punctuation in between words
+<
+foo,bar
+$ ./bin/keymaptest vim 'send 3l' 'send dw'
+foobar
+>= 0
+
+
+## de
+# 7. de
+<
+foo bar
+$ ./bin/keymaptest vim 'send de'
+ bar
+>= 0
+
+# 8. de while on last letter of a word
+<
+foo bar baz
+$ ./bin/keymaptest vim 'send 2l' 'send de'
+fo baz
+>= 0
+
+# 9. de while on space in between words
+<
+foo bar baz
+$ ./bin/keymaptest vim 'send 3l' 'send de'
+foo baz
+>= 0
+
+# 10. de while on punctuation in between words
+<
+foo,bar baz
+$ ./bin/keymaptest vim 'send 3l' 'send de'
+foo baz
+>= 0
+
+
+## db
+# 11. db
+<
+foo bar
+$ ./bin/keymaptest vim 'send 6l' 'send db'
+foo r
+>= 0
+
+# 12. db while on first letter of a word
+<
+foo bar baz
+$ ./bin/keymaptest vim 'send 8l' 'send db'
+foo baz
+>= 0
+
+# 13. db while on space in between words
+<
+foo bar baz
+$ ./bin/keymaptest vim 'send 7l' 'send db'
+foo  baz
+>= 0
+
+# 14. db while on punctuation in between words
+<
+foo bar,baz
+$ ./bin/keymaptest vim 'send 7l' 'send db'
+foo ,baz
+>= 0
+
+
+## count
+# 15. d[count]{motion}
+<
+foo bar baz
+$ ./bin/keymaptest vim 'send d2e'
+ baz
+>= 0
+
+# 16. [count]d{motion}
+<
+foo bar baz
+$ ./bin/keymaptest vim 'send 2de'
+ baz
+>= 0
+
+
+## dd
+# 17. dd
+<
+foo
+bar
+$ ./bin/keymaptest vim 'send dd'
+bar
+>= 0
+
+# 18. d[count]d
+<
+foo
+bar
+baz
+$ ./bin/keymaptest vim 'send d2d'
+baz
+>= 0
+
+# 19. [count]dd
+<
+foo
+bar
+baz
+$ ./bin/keymaptest vim 'send 2dd'
+baz
+>= 0
+
+
+## other
+# 20. dc = no-op (should reset context)
+<
+foo
+$ ./bin/keymaptest vim 'send dc'
+foo
+>= 0

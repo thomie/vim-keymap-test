@@ -1,0 +1,3 @@
+[editor]
+# Essential for the shelltest+expect to work: 
+clipboard-provider = "termcode"

@@ -1,0 +1,59 @@
+#!/usr/bin/env sh
+
+# When helixshowcursor is 1, we replace r1 by ;r1, to collapse selections into
+# a single cursor. This is useful when testing helix itself, to distinguish
+# real divergences from noise.
+helix_collapse_selection=yes
+
+configdir="$(dirname "$0")/../config"
+
+cmd="${1:-}"
+case "$(basename $cmd)" in 
+	*"vim"*)
+		cmd="$cmd -u $configdir/vimrc -i NONE --noplugin -N"
+		;;
+	*"hx"*)
+		cmd="$cmd --config $configdir/config.toml"
+		;;
+	*)
+		echo "Unknown command: '$cmd'. Options: ['vim', 'hx']" >&2
+		exit 1
+esac
+shift
+
+tempfile=$(mktemp)
+trap 'rm -f "$tempfile"' EXIT
+
+cat > "$tempfile"
+
+ESC="\033"
+
+expect >/dev/null <<EOF
+set ESC \033
+spawn $cmd "$tempfile"
+expect NOR
+$(for arg in "$@"; do
+  if [ "$helix_collapse_selection" = "yes" ]; then
+    arg="$(echo "$arg" | sed -E 's/r([0-9,]+)/\\;r\1/g')"
+  fi
+  printf "%s\n" "$arg"
+done)
+send $ESC
+sleep 0.1
+send :wq!\r
+expect eof
+EOF
+
+# Helix:
+# After sending `ESC` to leave insert mode, we need to expect 'NOR' before we
+# can quit. But sending `ESC` when already in normal mode wont't give us back
+# 'NOR', nor will we ever see 'INS'. So we need a timeout, but the minimum is 1
+# second, which is too long.
+# Therefore we just always send `ESC`, and add a sleep before quitting.
+
+#expect -timeout 1 INS {
+#  send $ESC
+#  expect NOR
+#}
+
+cat "$tempfile"

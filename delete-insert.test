@@ -1,0 +1,37 @@
+#!/usr/bin/env -S shelltest --execdir
+
+# 1. c{motion}
+<
+foo bar
+$ ./bin/keymaptest vim 'send ceX' 'expect INS'
+X bar
+>= 0
+
+# 2. cc
+<
+foo
+bar
+$ ./bin/keymaptest vim 'send ccX' 'expect INS'
+X
+bar
+>= 0
+
+# 3. [count]cc
+<
+foo
+bar
+baz
+$ ./bin/keymaptest vim 'send 2ccX' 'expect INS'
+X
+baz
+>= 0
+
+# 4. c[count]c
+<
+foo
+bar
+baz
+$ ./bin/keymaptest vim 'send c2cX' 'expect INS'
+X
+baz
+>= 0

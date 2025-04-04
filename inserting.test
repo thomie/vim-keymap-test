@@ -1,0 +1,17 @@
+#!/usr/bin/env -S shelltest --execdir
+
+# 1. when exiting insert mode after appending, we should return to the
+# character before the cursor
+<
+ab
+$ ./bin/keymaptest vim 'send a' 'expect INS' 'send $ESC' 'expect NOR' 'send r1'
+1b
+>= 0
+
+# 1. when exiting insert mode after inserting, we should return to the
+# character before the cursor (dubious)
+<
+ab
+$ ./bin/keymaptest vim 'send l' 'send i' 'expect INS' 'send $ESC' 'expect NOR' 'send r1'
+1b
+>= 0

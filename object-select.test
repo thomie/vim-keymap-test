@@ -1,0 +1,8 @@
+#!/usr/bin/env -S shelltest --execdir
+
+# 1. i
+<
+foo bar
+$ ./bin/keymaptest vim 'send l' 'send diw'
+ bar
+>= 0

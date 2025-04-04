@@ -1,0 +1,22 @@
+set laststatus=2
+function! Mode()
+    let l:mode = mode()
+    if l:mode ==# 'n'
+        return 'NORMAL'
+    elseif l:mode == 'i'
+        return 'INSERT'
+    elseif l:mode == 'R'
+        return 'REPLACE'
+    elseif l:mode == 'v'
+        return 'VISUAL (SELECT)'
+    elseif l:mode == 'V'
+        return 'VISUAL LINE (SELECT)'
+    elseif l:mode == "\<C-v>"
+        return 'VISUAL BLOCK (SELECT)'
+    elseif l:mode == 'c'
+        return 'COMMAND'
+    else
+        return l:mode
+    endif
+endfunction
+set statusline=%{Mode()}
