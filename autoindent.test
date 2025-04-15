@@ -1,0 +1,45 @@
+#!/usr/bin/env -S shelltest --execdir
+
+# Helix auto indents, and also auto dedents when hitting `ESC`:
+# https://github.com/helix-editor/helix/pull/1232
+# Let's test it.
+#
+# 1. auto indent
+<
+foo bar
+    baz
+$ ./bin/keymaptest vim 'send j6l' 'send o' 'expect INS' 'send 1'
+foo bar
+    baz
+    1
+>= 0
+
+# 2. auto dedent 
+<
+foo bar
+    baz
+$ ./bin/keymaptest vim 'send j6l' 'send o' 'expect INS' 'send $ESC' 'expect NOR' 'send a1' 
+foo bar
+    baz
+1
+>= 0
+
+# 3. auto indent after some other editing 
+<
+foo bar
+    baz
+$ ./bin/keymaptest vim 'send j6l' 'send a' 'expect INS' 'send " qux\r"' 'send 1'
+foo bar
+    baz qux
+    1
+>= 0
+
+# 4. auto dedent after some other editing 
+<
+foo bar
+    baz
+$ ./bin/keymaptest vim 'send j6l' 'send a' 'expect INS' 'send " qux\r"' 'send $ESC' 'expect NOR' 'send a1'
+foo bar
+    baz qux
+1
+>= 0

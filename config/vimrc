@@ -20,3 +20,5 @@ function! Mode()
     endif
 endfunction
 set statusline=%{Mode()}
+
+set autoindent
