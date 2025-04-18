@@ -1,0 +1,30 @@
+#!/usr/bin/env -S shelltest --execdir
+
+# 1. *
+<
+foo foo
+$ ./bin/keymaptest vim 'send *' 'send r1'
+foo 1oo
+>= 0
+
+# 2. *: detect word boundaries (should not match "foobar")
+<
+foo foobar foo
+$ ./bin/keymaptest vim 'send *' 'send r1'
+foo foobar 1oo
+>= 0
+
+# 3. *: cursor is on a space before the word
+<
+foo bar bar
+$ ./bin/keymaptest vim 'send 3l' 'send *' 'send r1'
+foo bar 1ar
+>= 0
+
+# 4. *: cursor is on a punctuation mark before the word
+<
+foo;bar bar
+$ ./bin/keymaptest vim 'send 3l' 'send *' 'send r1'
+foo;bar 1ar
+>= 0
+
